@@ -1,23 +1,47 @@
 # Robert Schwab — Apparel & Fishing Jigs
 
-Responsive website built with the original logos and photographs from the Robert Google Drive folder.
+A responsive, rustic-themed demonstration catalog using authentic Schwab logos and product photos from the Robert folder on Google Drive.
 
 ## Website sections
-Homepage (two fish facing one another), Apparel, Fishing Jigs, Photo Gallery, About, FAQ, Contact and draft Privacy Notice.
+- Home: both original fish-logo designs side-by-side
+- Apparel: seven approved sample photographs
+- Fishing Jigs: one verified jig/lure assortment photograph
+- Photo Gallery: nine approved photos with interactive category filters and an enlarged-photo viewer
+- About: factual introduction without an invented biography
+- FAQs, Contact, and draft Privacy Notice
 
-**Demonstration catalog.** No prices, specifications, availability or biography have been invented. One supplied photograph displaying Pyle Drilling branding is retained in the source assets but excluded from Schwab galleries pending owner approval.
+The two logo images are preserved exactly as supplied in PNG format, with optimized display copies in WebP. **Fish facing directions still require visual owner approval.**
 
-## Images
-The two original PNG logos are in the assets directory. Five original JPG photographs and five original HEIC photographs are preserved under assets/originals. The build script (scripts/build_images.py) converts HEIC images and all approved photos and logos into lightweight, browser-friendly WebP files under assets/images. The GitHub Action commits generated images to main, then deploys a clean build to GitHub Pages.
+## Photo processing
+Five original JPEGs and five original HEICs are preserved in `assets/originals/`. `scripts/build_images.py` converts the approved photos and original PNG logos to eleven optimized WebP browser assets in `assets/images/`.
 
-## Deployment
-The automated workflow is at .github/workflows/deploy.yml. The owner may need to enable GitHub Pages in Settings > Pages > Build and deployment > Source: GitHub Actions. The expected project site URL is https://wellsmm.github.io/RobertSchwab/ after a successful deployment.
+A Pyle Drilling-branded image is deliberately **excluded** from the Schwab gallery until its relevance and display rights are confirmed. A workshop photograph is labeled as a workshop image, not as a jig or item for sale.
 
-## Contact form: not yet active
-Form submissions are intentionally disabled until Robert selects an inbox and a secure backend such as Formspree. Edit the endpoint constant in assets/site.js, update the privacy notice, and test delivery before enabling live submissions. The UI already includes validation, a honeypot, a required consent acknowledgment and accessible status messaging.
+To rebuild locally:
 
-## Validation
-The workflow runs Node JavaScript syntax validation and checks site pages/image references before deployment. Complete an automated WCAG 2.2 AA and manual mobile review, confirm permission to use assets, and verify business terms before a commercial launch. There is no shopping cart, online payment or analytics.
+```bash
+python -m pip install "Pillow>=11,<13" "pillow-heif>=1,<2"
+python scripts/build_images.py
+python scripts/check_site.py
+node --check assets/site.js
+```
 
-## Local build
-Install Pillow and pillow-heif, run python scripts/build_images.py, then python scripts/check_site.py. Serve this directory using a static web server and open index.html.
+## GitHub Pages — one-time setup required
+
+The workflow in `.github/workflows/deploy.yml` converts images, validates all pages and assets, creates a Pages artifact, and deploys. It runs on pushes to `main` and via manual dispatch.
+
+**The repository owner must first enable GitHub Pages:**
+1. Open `wellsmm/RobertSchwab` on GitHub and choose **Settings > Pages**.
+2. Under **Build and deployment**, change **Source** to **GitHub Actions** and save.
+3. Open **Actions > Build and deploy Robert Schwab website**, and rerun or dispatch the workflow.
+4. After the deploy job succeeds, open `https://wellsmm.github.io/RobertSchwab/` and confirm page rendering.
+
+The prior workflow failed because `actions/configure-pages` attempted to create the Pages site using a token without the required repository administration privileges. This is a one-time account-side setting, not an error in HEIC conversion or page validation. The website must **not** be reported as live before a successful Pages deployment and browser smoke test.
+
+## Contact delivery and launch checklist
+
+The contact form is intentionally disabled: `assets/site.js` contains `const endpoint=""`. To activate it, Robert must choose the destination inbox and a Formspree or equivalent form endpoint. Update the contact form setup notice and draft privacy notice with the approved processor and real handling practices, then test successful and failed submissions. Do not put account passwords or tokens into browser JavaScript.
+
+Product names, available sizes, jig weights and colors, inventory, prices, ordering/shipping/returns, business details, and the About biography need Robert's approval. There is no cart, checkout or analytics.
+
+Accessibility measures include semantic headings, skip navigation, visible keyboard focus, reduced-motion rules, responsive layouts, a native dialog lightbox and announced gallery-filter results. **Automated and manual WCAG 2.2 AA testing is still outstanding**, including real-device mobile, keyboard and screen-reader testing.

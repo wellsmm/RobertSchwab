@@ -4,7 +4,7 @@ on:
     branches: [main]
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 concurrency:
@@ -26,24 +26,15 @@ jobs:
         run: |
           node --check assets/site.js
           python scripts/check_site.py
-      - name: Commit browser-ready images to repository
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/images
-          if ! git diff --cached --quiet; then
-            git commit -m "Generate optimized WebP images from supplied originals [skip ci]"
-            git push origin HEAD:main
-          fi
       - name: Prepare deploy directory
         run: |
           mkdir -p _site/assets
           cp index.html apparel.html jigs.html gallery.html about.html contact.html faq.html privacy.html .nojekyll robots.txt sitemap.xml _site/
           cp assets/site.css assets/site.js _site/assets/
           cp -R assets/images _site/assets/images
+      # GitHub Pages must be enabled once by the repo owner in Settings > Pages.
+      # The GITHUB_TOKEN cannot create a Pages site when the repository is not enabled.
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

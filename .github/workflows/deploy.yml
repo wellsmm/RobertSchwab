@@ -14,16 +14,21 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
       - name: Install image conversion libraries
         run: python -m pip install "Pillow>=11,<13" "pillow-heif>=1,<2"
       - name: Convert HEIC and optimize original photographs
         run: python scripts/build_images.py
       - name: Check JavaScript and website assets
         run: |
+          node --version
           node --check assets/site.js
           python scripts/check_site.py
       - name: Prepare deploy directory
@@ -34,10 +39,11 @@ jobs:
           cp -R assets/images _site/assets/images
       # GitHub Pages must be enabled once by the repo owner in Settings > Pages.
       # The GITHUB_TOKEN cannot create a Pages site when the repository is not enabled.
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
+          include-hidden-files: true # Preserve the .nojekyll file in Pages deployment
   deploy:
     needs: build
     runs-on: ubuntu-24.04
@@ -46,4 +52,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

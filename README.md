@@ -17,7 +17,7 @@ Five original JPEGs and five original HEICs are preserved in `assets/originals/`
 
 A Pyle Drilling-branded image is deliberately **excluded** from the Schwab gallery until its relevance and display rights are confirmed. A workshop photograph is labeled as a workshop image, not as a jig or item for sale.
 
-To rebuild locally:
+To rebuild locally (Node.js 24 is specified in `.nvmrc` for JavaScript validation):
 
 ```bash
 python -m pip install "Pillow>=11,<13" "pillow-heif>=1,<2"
@@ -29,6 +29,8 @@ node --check assets/site.js
 ## GitHub Pages — one-time setup required
 
 The workflow in `.github/workflows/deploy.yml` converts images, validates all pages and assets, creates a Pages artifact, and deploys. It runs on pushes to `main` and via manual dispatch.
+
+The CI workflow uses **Node.js 24**, with Node 24-compatible versions of `actions/checkout`, `actions/setup-node`, `actions/setup-python`, `actions/configure-pages`, `actions/upload-pages-artifact`, and `actions/deploy-pages`. The Pages artifact upload includes hidden files so `.nojekyll` is deployed.
 
 **The repository owner must first enable GitHub Pages:**
 1. Open `wellsmm/RobertSchwab` on GitHub and choose **Settings > Pages**.

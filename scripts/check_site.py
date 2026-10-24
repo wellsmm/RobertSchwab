@@ -61,4 +61,9 @@ assert all(token in js for token in ('data-filter="all"', 'data-filter="apparel"
 sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
 for filename in PAGES[1:]:
     assert "/" + filename in sitemap, f"Sitemap missing {filename}"
+# Theme-resistant solid cream panels should survive dark-mode recoloring and stale CSS.
+homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+assert "brand-cream-fallback" in homepage and "cream-solid-raster-2" in homepage
+assert "data:image/png;base64," in css and "background-image" in css
+assert "#f7f0dc" in css and "color-scheme: only light" in css
 print(f"PASS: {len(PAGES)} HTML pages, {len(asset_paths)} images, navigation, sitemap, accessibility hooks and gallery filters.")

@@ -71,5 +71,14 @@ img{max-width:100%}
 @media(max-width:650px){.filter-chip{flex:1 1 auto}.hero-logos{grid-template-columns:repeat(2,minmax(0,1fr))}.logo-card img{width:100%;height:clamp(90px,23vw,155px)}}
 @media print{.gallery-filters,.gallery-status{display:none!important}.gallery-group[hidden]{display:block!important}}
 
-/* Solid warm cream ensures transparent logos never show the forest-green hero through their cards. */
-.hero .hero-logos .logo-card { background-color:#f7f0dc; background-image:none; }
+
+/* Exact brand cream: raster backdrop avoids automatic dark-mode CSS recoloring.
+   Both logos remain transparent and sit atop this opaque 1px cream pattern. */
+.hero .hero-logos .logo-card {
+  background-color: #f7f0dc !important;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR42mP4/uEOAAWlAsShmr7yAAAAAElFTkSuQmCC") !important;
+  background-repeat: repeat !important;
+  background-size: 1px 1px !important;
+  color-scheme: only light;
+}
+.hero .hero-logos .logo-caption { color: #4d331e !important; }

@@ -14,8 +14,8 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install image conversion libraries
@@ -35,7 +35,7 @@ jobs:
       # GitHub Pages must be enabled once by the repo owner in Settings > Pages.
       # The GITHUB_TOKEN cannot create a Pages site when the repository is not enabled.
       - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
         with:
           path: _site
   deploy:

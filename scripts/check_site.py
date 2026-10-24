@@ -2,6 +2,7 @@
 """Validate pages, routes, local links and generated assets before publishing."""
 from html.parser import HTMLParser
 from pathlib import Path
+from PIL import Image
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -45,6 +46,13 @@ assert len(asset_paths) >= 11, f"Expected 11 approved images, found {len(asset_p
 for asset in asset_paths:
     file = ROOT / "assets" / asset
     assert file.is_file() and file.stat().st_size > 0, f"Missing or empty image: {asset}"
+# Logo optimization must retain real alpha transparency, not flatten on ivory.
+for logo in ("schwab.webp", "schwab-jigs.webp"):
+    file = ROOT / "assets" / "images" / "logos" / logo
+    with Image.open(file) as logo_image:
+        assert "A" in logo_image.getbands(), f"Logo must retain transparency: {logo}"
+        assert logo_image.getpixel((0, 0))[3] == 0, f"Logo background not removed: {logo}"
+        assert logo_image.getpixel((logo_image.width // 2, logo_image.height // 2))[3] > 200, f"Logo interior unexpectedly transparent: {logo}"
 for filename in PAGES:
     assert filename in js or filename == "privacy.html", f"Navigation lacks {filename}"
 assert "skip" in js and "focus-visible" in css and "prefers-reduced-motion" in css, "Accessibility basics missing"

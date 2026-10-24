@@ -1,0 +1,44 @@
+name: Build and deploy Schwab website
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Convert original HEIC photographs for browsers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libheif-examples
+          mkdir -p _site/assets/images/apparel _site/assets/images/jigs
+          cp -a index.html apparel.html jigs.html gallery.html about.html contact.html assets _site/
+          heif-convert assets/originals/jig-workshop.heic _site/assets/images/jigs/jig-workshop.jpg
+          heif-convert assets/originals/lure-display.heic _site/assets/images/jigs/lure-display.jpg
+          heif-convert assets/originals/fish-on-shirt-front.heic _site/assets/images/apparel/fish-on-shirt-front.jpg
+          heif-convert assets/originals/fish-on-shirt-back.heic _site/assets/images/apparel/fish-on-shirt-back.jpg
+          heif-convert assets/originals/minimal-shirt-front.heic _site/assets/images/apparel/minimal-shirt-front.jpg
+          touch _site/.nojekyll
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

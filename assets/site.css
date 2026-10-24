@@ -82,3 +82,32 @@ img{max-width:100%}
   color-scheme: only light;
 }
 .hero .hero-logos .logo-caption { color: #4d331e !important; }
+
+/* 150% homepage logo size, measured from the previous 245px desktop artwork.
+   Keep each image inside its gold-bordered cream card without cropping. */
+.hero .hero-inner.wrap { width: min(1400px, 96%); }
+.hero .hero-logos { max-width: 1400px; gap: clamp(.75rem, 2.5vw, 2.75rem); }
+.hero .hero-logos .logo-card {
+  padding: clamp(.65rem, 1.5vw, 1.25rem);
+  min-height: 430px;
+}
+.hero .hero-logos .logo-card img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 367.5px; /* 245px x 1.5 */
+  object-fit: contain;
+}
+@media (max-width: 800px) {
+  .hero .hero-logos .logo-card { min-height: 285px; }
+  .hero .hero-logos .logo-card img { height: 225px; } /* 150px x 1.5 */
+}
+@media (max-width: 650px) {
+  .hero .hero-logos .logo-card {
+    min-height: clamp(165px, 39vw, 295px);
+    padding: .5rem;
+  }
+  .hero .hero-logos .logo-card img {
+    height: clamp(135px, 34.5vw, 232.5px); /* 90/23vw/155 x 1.5 */
+  }
+}

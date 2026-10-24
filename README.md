@@ -10,10 +10,10 @@ A responsive, rustic-themed demonstration catalog using authentic Schwab logos a
 - About: factual introduction without an invented biography
 - FAQs, Contact, and draft Privacy Notice
 
-The two logo images are preserved exactly as supplied in PNG format, with optimized display copies in WebP. **Fish facing directions still require visual owner approval.**
+The two original PNG logos are preserved exactly as supplied. The optimized WebP display versions now have **genuine transparent backgrounds**: only near-white exterior pixels connected to the image edges are removed, preserving white highlights and lettering within the artwork. **Fish facing directions still require visual owner approval.**
 
 ## Photo processing
-Five original JPEGs and five original HEICs are preserved in `assets/originals/`. `scripts/build_images.py` converts the approved photos and original PNG logos to eleven optimized WebP browser assets in `assets/images/`.
+Five original JPEGs and five original HEICs are preserved in `assets/originals/`. `scripts/build_images.py` converts the approved photos and original PNG logos to eleven optimized WebP browser assets in `assets/images/`. Logo WebPs use lossless compression with a softened transparent silhouette; all product photographs remain opaque. `scripts/check_site.py` verifies transparency on both logos.
 
 A Pyle Drilling-branded image is deliberately **excluded** from the Schwab gallery until its relevance and display rights are confirmed. A workshop photograph is labeled as a workshop image, not as a jig or item for sale.
 

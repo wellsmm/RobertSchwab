@@ -42,6 +42,8 @@ jobs:
           cp assets/site.css assets/site.js _site/assets/
           cp -R assets/images _site/assets/images
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

@@ -1,0 +1,56 @@
+name: Build and deploy Robert Schwab website
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: robertschwab-pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install image conversion libraries
+        run: python -m pip install "Pillow>=11,<13" "pillow-heif>=1,<2"
+      - name: Convert HEIC and optimize original photographs
+        run: python scripts/build_images.py
+      - name: Check JavaScript and website assets
+        run: |
+          node --check assets/site.js
+          python scripts/check_site.py
+      - name: Commit browser-ready images to repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images
+          if ! git diff --cached --quiet; then
+            git commit -m "Generate optimized WebP images from supplied originals [skip ci]"
+            git push origin HEAD:main
+          fi
+      - name: Prepare deploy directory
+        run: |
+          mkdir -p _site/assets
+          cp index.html apparel.html jigs.html gallery.html about.html contact.html faq.html privacy.html .nojekyll robots.txt sitemap.xml _site/
+          cp assets/site.css assets/site.js _site/assets/
+          cp -R assets/images _site/assets/images
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
